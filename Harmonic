@@ -1,0 +1,101 @@
+[t,y]=ode45(@my_shm,[0,100],[0,10]);
+plot(t,y(:,2),'r');
+
+
+[time,y] = SHM_Euler (10);  
+subplot(2,2,1); 
+plot(time,y,'r' ); 
+axis([0 100 -100 100]); 
+xlabel('Time'); 
+ylabel('Displacement');  
+legend ('Euler method');  
+
+[time,y] = SHM_Euler_Cromer (10);
+
+subplot(2,2,2);
+plot(time,y,'b' ); 
+axis([0 100 -20 20]);
+xlabel('Time');
+ylabel('Displacement');
+legend ('Euler Cromer method'); 
+
+[time,y] = SHM_Runge_Kutta (10);  
+
+subplot(2,2,3);
+plot(time,y,'g' ); 
+axis([0 100 -20 20]);
+xlabel('Time');
+ylabel('Displacement'); 
+legend ('Runge-Kutta method');
+
+[t,y]=ode23(@SHM_ODE45_function,[0,100],[0,10]); 
+
+subplot(2,2,4); 
+plot(t,y(:,2),'k'); 
+axis([0 100 -20 20]); 
+xlabel('Time'); 
+ylabel('Displacement');
+legend ('ODE45 Solver'); 
+
+function [time,y] = SHM_Euler (initial_displacement); 
+npoints = 2500; 
+dt = 0.04;   
+
+v = zeros(npoints,1); 
+y = zeros(npoints,1); 
+time = zeros(npoints,1); 
+y(1)=initial_displacement; 
+
+for step = 1:npoints-1 
+    v(step+1) = v(step) - y(step)*dt; 
+    y(step+1) = y(step)+v(step)*dt; 
+    time(step+1) = time(step) + dt; 
+end
+
+function [time,y] = SHM_Euler_Cromer (initial_displacement); 
+npoints = 2500; 
+dt = 0.04;   
+
+v = zeros(npoints,1); 
+y = zeros(npoints,1); 
+time = zeros(npoints,1); 
+y(1)=initial_displacement; 
+
+for step = 1:npoints-1 
+    v(step+1) = v(step) - y(step)*dt;
+    y(step+1) = y(step)+v(step+1)*dt;
+    time(step+1) = time(step) + dt;  
+end;   
+
+function [time,y] = SHM_Runge_Kutta(initial_displacement); 
+
+npoints = 2500; 
+dt = 0.04;
+
+v = zeros(npoints,1); 
+y = zeros(npoints,1); 
+time = zeros(npoints,1); 
+y(1)=initial_displacement; 
+
+v = zeros(npoints,1); 
+y = zeros(npoints,1); 
+v_dash = zeros(npoints,1); 
+y_dash = zeros(npoints,1); 
+time = zeros(npoints,1); 
+y(1)=10; 
+
+for step = 1:npoints-1 
+      v_dash=v(step)-0.5*y(step)*dt;   
+      y_dash=y(step)+0.5*v(step)*dt;     
+      v(step+1) = v(step)-y_dash*dt;  
+      y(step+1) = y(step)+v_dash*dt;   
+      time(step+1) = time(step)+dt;  
+end;  
+
+function dy = SHM_ODE45_function(t,y); 
+y1 = y(1); 
+v =  y(2); 
+
+dy1=v; 
+dy2=-y1; 
+dy = [dy1;dy2];  
