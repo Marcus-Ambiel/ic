@@ -1,0 +1,51 @@
+%Tensor MATLAB
+
+clear;
+clc;
+clear all;
+
+vetM{2}= [1 0 ; 0 -1];
+vetM{1}= [1 0 ; 0 1]; 
+
+n=3;
+for k=1:n
+v{k}= ones(1,n);
+end
+
+v{n}(1,1)=2;
+v{n}(1,n)=2;
+
+for k=1: n-1
+
+        v{k}(1,k)=2;
+	v{k}(1,k+1)=2;
+   
+ 
+end
+aux2=0
+for j=1:n
+M{j}=vetM{v{j}(1,1)}
+for k=1:n-1
+    aux=M{j}
+          M{j}=kron(aux,vetM{v{j}(1,k+1)});
+             
+end
+aux2=aux2+M{j}
+end
+
+
+
+    for k=1:n
+        v{k}= ones(1,n);
+    end
+
+v{n}(1,1)=2;
+v{n}(1,n)=2;
+
+for k=1: n-2
+
+       v{k}(1,k)=2;
+	v{k}(1,k+2)=2;
+   
+ 
+end
