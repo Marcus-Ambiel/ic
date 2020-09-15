@@ -1,0 +1,160 @@
+$Hamiltoniana MATLAB
+
+clear;
+clc;
+
+vetY{1}=[1 0; 0 1]; % ID
+vetY{2}=[0 -1i; 1i 0]; % sigma Y
+vetX{1}= [1 0 ; 0 1]; %ID
+vetX{2}= [0 1 ; 1 0]; % Sigma X
+vetM{2}= [1 0 ; 0 -1]; % Sigma Z
+vetM{1}= [1 0 ; 0 1]; % ID
+
+n=4; 
+
+for k=1:n
+v{k}= ones(1,n);
+end
+
+v{n}(1,1)=2;
+v{n}(1,n)=2;
+
+for k=1: n-1
+
+        v{k}(1,k)=2;
+        v{k}(1,k+1)=2;
+
+ 
+end
+aux2=0;
+
+
+        for H=1:n 
+            for j=1:n
+            M{j}=vetM{v{j}(1,1)};
+                for k=1:n-1
+                aux=M{j};
+                M{j}=kron(aux,vetM{v{j}(1,k+1)});
+
+                end
+            aux2=aux2+M{j};
+            end
+
+
+    for k=1:n
+    f{k}= ones(1,n);
+    end
+
+
+
+            for k=1: n-2
+                f{k}(1,k)=2;
+                f{k}(1,k+2)=2;
+            end
+
+        f{n}(1,2)=2;
+        f{n}(1,n)=2;
+        f{n-1}(1,1)=2;
+        f{n-1}(1,n-1)=2;
+
+        aux4=0;
+
+            for j=1:n
+            N{j}=vetM{f{j}(1,1)};
+                for k=1:n-1
+                aux3=N{j};
+                N{j}=kron(aux3,vetM{f{j}(1,k+1)});
+
+                end
+            aux4=aux4+N{j};
+
+            end
+
+
+for k=1:n
+x{k}= ones(1,n);
+end 
+            for k=1: n
+
+            x{k}(1,k)=2;
+            end
+
+           aux5=0;
+                for j=1:n
+                X{j}=vetX{x{j}(1,1)};
+                    for k=1:n-1
+                    aux6=X{j};
+                    X{j}=kron(aux6,vetM{f{j}(1,k+1)});
+
+                    end
+                        aux7=aux5+X{j};
+                end
+                
+for Kappa=0.01:1
+    for G=0.01:1
+    
+Ha = -(aux2 - Kappa*aux4 + G*aux7); 
+
+    M1 = eig(Ha);
+    [autovetor, autovalor] = eig(Ha);
+   
+    
+     Matriz = transpose([M1 autovetor]);
+  
+     v0 = transpose(autovetor);
+     v00 = (v0(:,1))';
+    end
+end
+    
+        end
+        
+     
+       
+        
+%Sigma X
+
+
+        
+         aux8=0;
+
+            for j=1:n
+            X1{j}=vetX{v{j}(1,1)};
+                for k=1:n-1
+                aux9=X1{j};
+                X1{j}=kron(aux9,vetX{v{j}(1,k+1)});
+
+                end
+            aux10=aux8+X1{j};
+
+            end
+            
+            
+            
+%Sigma Y
+
+aux11=0;
+
+            for j=1:n
+            Y1{j}=vetX{v{j}(1,1)};
+                for k=1:n-1
+                aux12=Y1{j};
+                Y1{j}=kron(aux12,vetX{v{j}(1,k+1)});
+                end
+            aux13=aux11+Y1{j};
+
+            end
+            
+%Sigma Z 
+
+aux14=0;
+
+            for j=1:n
+            Z1{j}=vetX{v{j}(1,1)};
+                for k=1:n-1
+                aux15=Z1{j};
+             Z1{j}=kron(aux15,vetX{v{j}(1,k+1)});
+
+                end
+            aux16=aux14+Z1{j};
+
+            end
