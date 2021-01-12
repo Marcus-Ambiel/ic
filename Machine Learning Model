@@ -1,0 +1,42 @@
+%matplotlib notebook
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler  
+
+dataset = pd.read_csv('vetl8.csv')
+
+X = dataset.iloc[0:10201].values   #features
+y = dataset.iloc[:,0].values    #target 
+
+
+X_train, X_test, y_train, y_test  =  train_test_split(X, y, test_size=0.3)
+
+
+scaler = StandardScaler()  
+scaler.fit(X_train)
+
+X_train = scaler.transform(X_train)  
+X_test = scaler.transform(X_test) 
+
+scaler = MinMaxScaler()
+scaler.fit(X_train)
+
+X_train_scaled = scaler.fit_transform(X_train)
+# Dimensionamento conjunto de teste e treinamento
+X_test_scaled = scaler.transform(X_test)
+
+knn = KNeighborsClassifier(n_neighbors = 3) #KNN
+knn.fit(X_train_scaled, y_train) #KNN
+
+
+
+#Treino
+print('Accuracy KNN treino: {:.4%}'
+     .format(knn.score(X_train_scaled, y_train)))
+#Teste
+print('Accuracy KNN teste: {:.4%}'
+     .format(knn.score(X_test_scaled, y_test)))
